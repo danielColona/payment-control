@@ -1,23 +1,13 @@
 const request = require('supertest')
 const { expect } = require('chai')
+const { login } = require('../../helpers/login.js')
+const loginFixture = require('../../fixtures/login.json')
 
 describe('Mutation - Criar Funcionário', () => {
     let token
 
     before(async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                    }
-                }`,
-                variables: {
-                    email: "admin@admin.com",
-                    senha: "123456"
-                }
-            })
+        const resposta = await login(loginFixture.admin)
 
         expect(resposta.status).to.equal(200)
         token = resposta.body.data.login.token
